@@ -1,0 +1,17 @@
+$ Plate mesh: 3 x 2 grids, 2 CQUAD4 elements and a CBAR stiffener
+GRID    1               0.      0.      0.
+GRID    2               1.      0.      0.
+GRID    3               2.      0.      0.
+GRID    4               0.      .5      0.
+GRID    5               1.      .5      0.
+GRID    6               2.      .5      0.
+GRID    7               0.      1.      0.
+GRID    8               1.      1.      0.
+GRID    9               2.      1.      0.
+CQUAD4  1       1       1       2       5       4
+CQUAD4  2       1       2       3       6       5
+CQUAD4,3,2,4,5,8,7
+CQUAD4  4       2       5       6       9       8       0.      .002
++               1       1.      1.      1.      1.
+CBAR    10      3       1       2       0.      0.      1.
+CBAR    11      3       2       3       0.      0.      1.

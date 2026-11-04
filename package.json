@@ -1,0 +1,427 @@
+{
+  "name": "nastran-bdf",
+  "displayName": "Nastran BDF",
+  "description": "Edit MSC/NX Nastran input decks (.bdf/.dat/.aset): field-aware hovers, small/large/free-field conversion, INCLUDE navigation, card references, outline and diagnostics. Read .f06 output files: section outline and folding, FATAL/WARNING messages in the Problems panel.",
+  "version": "0.2.0",
+  "publisher": "mrcsschmdt",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mrcsschmdt/nastran-vs-code-extension.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mrcsschmdt/nastran-vs-code-extension/issues"
+  },
+  "homepage": "https://github.com/mrcsschmdt/nastran-vs-code-extension#readme",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Formatters",
+    "Linters"
+  ],
+  "keywords": [
+    "nastran",
+    "bdf",
+    "fea",
+    "fem",
+    "msc",
+    "f06",
+    "simcenter",
+    "finite element"
+  ],
+  "main": "./out/src/extension.js",
+  "activationEvents": [],
+  "contributes": {
+    "languages": [
+      {
+        "id": "nastran",
+        "aliases": [
+          "Nastran (MSC)",
+          "Nastran",
+          "nastran",
+          "BDF"
+        ],
+        "extensions": [
+          ".bdf",
+          ".dat",
+          ".aset",
+          ".nas",
+          ".blk",
+          ".bulk",
+          ".inc",
+          ".pch",
+          ".dmap"
+        ],
+        "configuration": "./language-configuration.json"
+      },
+      {
+        "id": "nastran-output",
+        "aliases": [
+          "Nastran Output",
+          "F06"
+        ],
+        "extensions": [
+          ".f06"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "nastran",
+        "scopeName": "source.nastran",
+        "path": "./syntaxes/nastran.tmLanguage.json"
+      },
+      {
+        "language": "nastran-output",
+        "scopeName": "source.nastran-output",
+        "path": "./syntaxes/nastran-output.tmLanguage.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "nastran.convertToSmallField",
+        "title": "Convert Card(s) to Small Field (8-char)",
+        "category": "Nastran"
+      },
+      {
+        "command": "nastran.convertToLargeField",
+        "title": "Convert Card(s) to Large Field (16-char)",
+        "category": "Nastran"
+      },
+      {
+        "command": "nastran.convertToFreeField",
+        "title": "Convert Card(s) to Free Field (comma)",
+        "category": "Nastran"
+      },
+      {
+        "command": "nastran.alignCards",
+        "title": "Re-align Card(s) in Their Current Format",
+        "category": "Nastran"
+      },
+      {
+        "command": "nastran.formatDocument",
+        "title": "Format All Cards in File",
+        "category": "Nastran",
+        "icon": "$(wand)"
+      },
+      {
+        "command": "nastran.insertFieldHeader",
+        "title": "Insert Field-Name Comment Above Card",
+        "category": "Nastran"
+      },
+      {
+        "command": "nastran.toggleFieldShading",
+        "title": "Toggle Field Column Shading",
+        "category": "Nastran"
+      },
+      {
+        "command": "nastran.showModelSummary",
+        "title": "Show Card Count Summary",
+        "category": "Nastran"
+      },
+      {
+        "command": "nastran.useBlueHoverHighlight",
+        "title": "Use Blue Hover Highlight for Current Theme",
+        "category": "Nastran"
+      },
+      {
+        "command": "nastran.removeBlueHoverHighlight",
+        "title": "Remove Blue Hover Highlight for Current Theme",
+        "category": "Nastran"
+      },
+      {
+        "command": "nastran.openDefinitionsFolder",
+        "title": "Open Private Definitions Folder",
+        "category": "Nastran"
+      },
+      {
+        "command": "nastran.reloadDefinitions",
+        "title": "Reload Private Definitions",
+        "category": "Nastran"
+      },
+      {
+        "command": "nastran.wrapComments",
+        "title": "Wrap Long Comment Lines",
+        "category": "Nastran"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "nastran.formatDocument",
+          "when": "editorLangId == nastran",
+          "group": "navigation@1"
+        }
+      ],
+      "editor/context": [
+        {
+          "submenu": "nastran.formatSubmenu",
+          "when": "editorLangId == nastran",
+          "group": "1_modification@9"
+        }
+      ],
+      "nastran.formatSubmenu": [
+        {
+          "command": "nastran.formatDocument",
+          "group": "0@1"
+        },
+        {
+          "command": "nastran.convertToSmallField",
+          "group": "1@1"
+        },
+        {
+          "command": "nastran.convertToLargeField",
+          "group": "1@2"
+        },
+        {
+          "command": "nastran.convertToFreeField",
+          "group": "1@3"
+        },
+        {
+          "command": "nastran.alignCards",
+          "group": "1@4"
+        },
+        {
+          "command": "nastran.insertFieldHeader",
+          "group": "2@1"
+        }
+      ]
+    },
+    "submenus": [
+      {
+        "id": "nastran.formatSubmenu",
+        "label": "Nastran"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "nastran.formatDocument",
+        "key": "ctrl+alt+f",
+        "when": "editorTextFocus && editorLangId == nastran"
+      },
+      {
+        "command": "nastran.convertToSmallField",
+        "key": "ctrl+alt+8",
+        "when": "editorTextFocus && editorLangId == nastran"
+      },
+      {
+        "command": "nastran.convertToLargeField",
+        "key": "ctrl+alt+6",
+        "when": "editorTextFocus && editorLangId == nastran"
+      },
+      {
+        "command": "nastran.convertToFreeField",
+        "key": "ctrl+alt+,",
+        "when": "editorTextFocus && editorLangId == nastran"
+      }
+    ],
+    "colors": [
+      {
+        "id": "nastran.fieldShadingBackground",
+        "description": "Background of every other field of fixed-format Nastran cards (keep it translucent so selections stay visible).",
+        "defaults": {
+          "dark": "#ffffff16",
+          "light": "#00000012",
+          "highContrast": "#ffffff2a",
+          "highContrastLight": "#00000026"
+        }
+      },
+      {
+        "id": "nastran.fieldShadingActiveLineBackground",
+        "description": "Field shading on lines with the cursor or a selection. It sits on top of the line highlight, so it needs slightly more opacity than the normal shading to keep the same contrast.",
+        "defaults": {
+          "dark": "#ffffff19",
+          "light": "#00000013",
+          "highContrast": "#ffffff2c",
+          "highContrastLight": "#00000028"
+        }
+      }
+    ],
+    "configuration": {
+      "title": "Nastran",
+      "properties": {
+        "nastran.format.defaultStyle": {
+          "type": "string",
+          "enum": [
+            "preserve",
+            "small",
+            "large",
+            "free"
+          ],
+          "enumDescriptions": [
+            "Keep each card in the format it is written in; only re-align fields.",
+            "Convert every card to small field (8 character fields).",
+            "Convert every card to large field (16 character fields).",
+            "Convert every card to free field (comma separated)."
+          ],
+          "default": "preserve",
+          "description": "Format used by 'Format Document' / 'Format Selection' for bulk data cards."
+        },
+        "nastran.format.alignment": {
+          "type": "string",
+          "enum": [
+            "mixed",
+            "right",
+            "left"
+          ],
+          "enumDescriptions": [
+            "Numbers right-justified, text (YES, THRU, K ...) left-justified, as FEMAP writes them.",
+            "Right-justify every value, as the NX I-deas translator and pyNastran write them.",
+            "Left-justify every value."
+          ],
+          "default": "mixed",
+          "description": "Justification of values in fields 2-9 of fixed-format (small/large field) cards. Nastran accepts values anywhere in the field; the card name (field 1) is always left-justified."
+        },
+        "nastran.format.continuationMarker": {
+          "type": "string",
+          "default": "+",
+          "description": "Marker for small-field continuations, written in field 1 of the continuation line and in field 10 of the line before it (FEMAP style), e.g. '+'. Empty gives blank continuations. Large-field continuations always use '*' in field 1."
+        },
+        "nastran.format.uppercase": {
+          "type": "boolean",
+          "default": true,
+          "description": "Upper-case card names and character fields when formatting."
+        },
+        "nastran.fieldShading.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Shade every other field of fixed-format bulk data cards so field boundaries are visible."
+        },
+        "nastran.diagnostics.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Report formatting and field-type problems (missing decimal points, overflowing fields, unknown cards, missing INCLUDE files ...)."
+        },
+        "nastran.diagnostics.unknownCards": {
+          "type": "boolean",
+          "default": false,
+          "description": "Report bulk data cards that are not in the extension's card database (the database is not complete, so this is off by default)."
+        },
+        "nastran.diagnostics.duplicateIds": {
+          "type": "boolean",
+          "default": true,
+          "description": "Warn about duplicate grid/element/property/material/coordinate system IDs within a file."
+        },
+        "nastran.folding.cardGroups": {
+          "type": "boolean",
+          "default": true,
+          "description": "Fold runs of consecutive bulk data cards by category (grids & coordinate systems, elements, properties, materials, constraints, loads, parameters ...) and by card type (CQUAD4, CTRIA3, CHEXA ...). A comment line directly above a run is used as the fold title."
+        },
+        "nastran.f06.messages": {
+          "type": "string",
+          "enum": [
+            "fatal",
+            "warning",
+            "information"
+          ],
+          "enumDescriptions": [
+            "Only FATAL messages.",
+            "FATAL and WARNING messages.",
+            "All messages, including INFORMATION messages."
+          ],
+          "default": "warning",
+          "markdownDescription": "Solver messages of `.f06` output files that are listed in the Problems panel and the Outline view (FATAL as errors, WARNING as warnings, INFORMATION as information)."
+        },
+        "nastran.maxLinesForAnalysis": {
+          "type": "number",
+          "default": 400000,
+          "description": "Files longer than this skip diagnostics and field shading to keep the editor responsive."
+        },
+        "nastran.includePaths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Extra directories searched when resolving relative INCLUDE paths (after the including file's directory and the workspace folders)."
+        },
+        "nastran.index.searchWorkspace": {
+          "type": "boolean",
+          "default": true,
+          "description": "When a referenced ID is not found in the current file or its INCLUDEs, also search Nastran files in the workspace."
+        },
+        "nastran.completion.style": {
+          "type": "string",
+          "enum": [
+            "free",
+            "fixed"
+          ],
+          "enumDescriptions": [
+            "Insert a free-field template with a tab stop for each field (GRID,ID,CP,...). Use 'Convert to Small Field' afterwards if you prefer fixed format.",
+            "Insert a '$' comment line with the field names aligned to the 8-character columns, followed by the card name. Use Tab (8 spaces) to move between fields."
+          ],
+          "default": "free",
+          "description": "Template inserted when completing a bulk data card name."
+        },
+        "nastran.definitionFiles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "markdownDescription": "Extra definition files or folders (JSON) with private or company-specific cards, PARAMs, case control commands, DMAP statements and INCLUDE notes. Files in `~/.nastran/definitions/` are always loaded. Supports `~`, `${userHome}` and `${workspaceFolder}`. These files are never part of the extension."
+        },
+        "nastran.comments.autoWrap": {
+          "type": "boolean",
+          "default": true,
+          "description": "While typing in a $ comment line, move the last word to a new comment line when the line gets longer than nastran.comments.wrapColumn."
+        },
+        "nastran.comments.wrapColumn": {
+          "type": "number",
+          "default": 80,
+          "minimum": 20,
+          "description": "Maximum length of comment lines for automatic wrapping and \"Nastran: Wrap Long Comment Lines\" (Nastran reads 80 columns)."
+        },
+        "nastran.format.wrapComments": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Format Document / Format Selection also wrap `$` comment lines that are longer than `#nastran.comments.wrapColumn#`."
+        }
+      }
+    },
+    "configurationDefaults": {
+      "[nastran]": {
+        "editor.defaultFormatter": "mrcsschmdt.nastran-bdf",
+        "editor.tabSize": 8,
+        "editor.insertSpaces": true,
+        "editor.detectIndentation": false,
+        "editor.rulers": [
+          8,
+          72,
+          80
+        ],
+        "editor.wordWrap": "off",
+        "editor.wordBasedSuggestions": "off"
+      },
+      "[nastran-output]": {
+        "editor.wordWrap": "off"
+      }
+    },
+    "jsonValidation": [
+      {
+        "fileMatch": [
+          "**/.nastran/definitions/*.json",
+          "*.nastran-defs.json"
+        ],
+        "url": "./schemas/nastran-definitions.schema.json"
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "npm run compile && node --test out/test/parser.test.js out/test/definitions.test.js out/test/comments.test.js out/test/f06.test.js",
+    "package": "npx @vscode/vsce package",
+    "vscode:prepublish": "npm run compile",
+    "test:vscode": "npm run compile && node out/test/integration/runTest.js"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "1.85.0",
+    "@vscode/test-electron": "^2.5.2",
+    "typescript": "^5.9.3"
+  }
+}

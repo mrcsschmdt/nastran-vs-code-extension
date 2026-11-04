@@ -1,0 +1,19 @@
+$ This file deliberately contains common input mistakes.
+$ Open the Problems panel (Ctrl+Shift+M) to see what the extension reports,
+$ and use the light bulb (Ctrl+.) on the first GRID for a quick fix.
+BEGIN BULK
+$ integer in a real field (X1, X2, X3 need a decimal point)
+GRID    1               0       0       0
+$ two values typed into one 8-character field
+GRID    2               1. 2.   0.
+$ exponent without decimal point
+MAT1    1       2E11            .3
+$ text beyond column 80 is ignored by Nastran
+CROD    1       1       1       2                                                       99
+$ duplicate element ID
+CROD    1       1       2       3
+$ missing include file
+INCLUDE 'does/not/exist.bdf'
+$ continuation without a parent card (INCLUDE ended the previous card)
++       1.      2.
+ENDDATA

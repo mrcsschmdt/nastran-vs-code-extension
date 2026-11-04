@@ -1,0 +1,11 @@
+$TITLE   = SAMPLE MODES                                                         1
+$SUBTITLE=                                                                      2
+$LABEL   =                                                                      3
+$EIGENVECTOR                                                                    4
+$REAL OUTPUT                                                                    5
+$SUBCASE ID =           1                                                       6
+$EIGENVALUE =  0.1234560E+04  MODE =     1                                      7
+         1       G      1.000000E+00      0.000000E+00      0.000000E+00        8
+-CONT-                  0.000000E+00      0.000000E+00      0.000000E+00        9
+      1001       G      5.000000E-01      2.500000E-01      0.000000E+00       10
+-CONT-                  0.000000E+00      0.000000E+00      1.000000E-02       11

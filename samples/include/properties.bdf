@@ -1,0 +1,10 @@
+$ Properties and materials
+PSHELL  1       1       .005    1               1
+PCOMP   2               0.      0.      HILL
++       1       .00125  0.      YES     1       .00125  45.     YES
++       1       .00125  -45.    YES     1       .00125  90.     YES
+PBARL   3       1               BOX
++       .05     .05     .005    .005
+$ E exponents are accepted; the shorter 7.1+10 / 2.3-5 shorthand is what the extension writes
+MAT1*   1               7.1E+10                         .33
+*       2700.           2.3E-5

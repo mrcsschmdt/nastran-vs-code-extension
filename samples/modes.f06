@@ -1,0 +1,100 @@
+1
+
+                     Sample Nastran output file for the Nastran BDF extension (made-up model).
+                     Open the Outline view, fold the sections, and look at the Problems panel.
+
+1    SAMPLE PLATE MODES                                                    NOVEMBER  4, 2026  MSC Nastran  2/14/26   PAGE     1
+
+0        N A S T R A N    E X E C U T I V E    C O N T R O L    E C H O
+0
+
+
+     SOL 103
+     CEND
+1    SAMPLE PLATE MODES                                                    NOVEMBER  4, 2026  MSC Nastran  2/14/26   PAGE     2
+
+0
+                                        C A S E    C O N T R O L    E C H O
+                 COMMAND
+                 COUNT
+                  1      TITLE = SAMPLE PLATE MODES
+                  2      ECHO = NONE
+                  3      $ S U B C A S E S
+                  4      SUBCASE 1
+                  5         METHOD = 10
+                  6         DISPLACEMENT(PRINT) = ALL
+                  7      BEGIN BULK
+ *** USER WARNING MESSAGE 2251 (IFS1P)
+     ONE OR MORE MAT1 ENTRIES HAVE UNREASONABLE OR INCONSISTENT VALUES OF E,G OR NU.  ID OF FIRST ONE =      1
+1    SAMPLE PLATE MODES                                                    NOVEMBER  4, 2026  MSC Nastran  2/14/26   PAGE     3
+
+0
+                                        M O D E L   S U M M A R Y          BULK = 0
+                                   ENTRY NAME        NUMBER OF ENTRIES
+                                   ----------        -----------------
+                                       CQUAD4                        4
+                                         GRID                        9
+                                         MAT1                        1
+                                       PSHELL                        1
+                                       EIGRL                         1
+
+ *** USER INFORMATION MESSAGE 7310 (VECPRN)
+     ORIGIN OF SUPERELEMENT BASIC COORDINATE SYSTEM WILL BE USED AS REFERENCE LOCATION.
+     RESULTANTS ABOUT ORIGIN OF SUPERELEMENT BASIC COORDINATE SYSTEM IN SUPERELEMENT BASIC SYSTEM COORDINATES.
+1    SAMPLE PLATE MODES                                                    NOVEMBER  4, 2026  MSC Nastran  2/14/26   PAGE     4
+
+0
+                           O U T P U T   F R O M   G R I D   P O I N T   W E I G H T   G E N E R A T O R
+0                                                     REFERENCE POINT =        0
+                                                                M O
+                      *  7.800000E-03  0.000000E+00  0.000000E+00  0.000000E+00  3.900000E-02 -3.900000E-02 *
+                      *  0.000000E+00  7.800000E-03  0.000000E+00 -3.900000E-02  0.000000E+00  3.900000E-02 *
+                      *  0.000000E+00  0.000000E+00  7.800000E-03  3.900000E-02 -3.900000E-02  0.000000E+00 *
+                      *  0.000000E+00 -3.900000E-02  3.900000E-02  2.600000E-01 -1.950000E-01 -1.950000E-01 *
+                      *  3.900000E-02  0.000000E+00 -3.900000E-02 -1.950000E-01  2.600000E-01 -1.950000E-01 *
+                      * -3.900000E-02  3.900000E-02  0.000000E+00 -1.950000E-01 -1.950000E-01  5.200000E-01 *
+1    SAMPLE PLATE MODES                                                    NOVEMBER  4, 2026  MSC Nastran  2/14/26   PAGE     5
+
+0                                                                                                            SUBCASE 1
+
+                                              R E A L   E I G E N V A L U E S
+   MODE    EXTRACTION      EIGENVALUE            RADIANS             CYCLES            GENERALIZED         GENERALIZED
+    NO.       ORDER                                                                       MASS              STIFFNESS
+        1         1        3.947842E+05        6.283185E+02        1.000000E+02        1.000000E+00        3.947842E+05
+        2         2        1.579137E+06        1.256637E+03        2.000000E+02        1.000000E+00        1.579137E+06
+1    SAMPLE PLATE MODES                                                    NOVEMBER  4, 2026  MSC Nastran  2/14/26   PAGE     6
+
+0                                                                                                            SUBCASE 1
+      EIGENVALUE =  3.947842E+05
+          CYCLES =  1.000000E+02         R E A L   E I G E N V E C T O R   N O .          1
+
+      POINT ID.   TYPE          T1             T2             T3             R1             R2             R3
+             1      G      0.0            0.0            0.0            0.0            0.0            0.0
+             2      G      0.0            0.0            5.000000E-01   1.000000E-01   0.0            0.0
+             3      G      0.0            0.0            1.000000E+00   2.000000E-01   0.0            0.0
+1    SAMPLE PLATE MODES                                                    NOVEMBER  4, 2026  MSC Nastran  2/14/26   PAGE     7
+
+0                                                                                                            SUBCASE 1
+      EIGENVALUE =  3.947842E+05
+          CYCLES =  1.000000E+02         R E A L   E I G E N V E C T O R   N O .          1
+
+      POINT ID.   TYPE          T1             T2             T3             R1             R2             R3
+             4      G      0.0            0.0            5.000000E-01   1.000000E-01   0.0            0.0
+             5      G      0.0            0.0            7.500000E-01   1.500000E-01   0.0            0.0
+1    SAMPLE PLATE MODES                                                    NOVEMBER  4, 2026  MSC Nastran  2/14/26   PAGE     8
+
+0                                                                                                            SUBCASE 1
+      EIGENVALUE =  1.579137E+06
+          CYCLES =  2.000000E+02         R E A L   E I G E N V E C T O R   N O .          2
+
+      POINT ID.   TYPE          T1             T2             T3             R1             R2             R3
+             1      G      0.0            0.0            0.0            0.0            0.0            0.0
+             2      G      0.0            0.0           -1.000000E+00  -2.000000E-01   0.0            0.0
+             3      G      0.0            0.0            1.000000E+00   2.000000E-01   0.0            0.0
+1    SAMPLE PLATE MODES                                                    NOVEMBER  4, 2026  MSC Nastran  2/14/26   PAGE     9
+
+0                                   * * * *  A N A L Y S I S  S U M M A R Y  T A B L E  * * * *
+0 SEID  PEID PROJ VERS APRCH      SEMG SEMR SEKR SELG SELR MODES DYNRED SOLLIN PVALID SOLNL LOOPID DESIGN CYCLE SENSITIVITY
+ --------------------------------------------------------------------------------------------------------------------------
+     0     0    1    1 '        '    T    T    T    T    T     T      F      F      F     F     -1            0           F
+1                                        * * * END OF JOB * * *

@@ -1,0 +1,11 @@
+# Allow-list: package only what the extension needs. Everything else
+# (tests, samples, scripts, local or private folders) is excluded.
+**
+!out/src/**/*.js
+!syntaxes/**
+!schemas/**
+!language-configuration.json
+!README.md
+!package.json
+!LICENSE*
+!CHANGELOG*

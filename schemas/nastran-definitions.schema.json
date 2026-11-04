@@ -1,0 +1,162 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Nastran BDF private definitions",
+  "description": "Private or company-specific definitions for the Nastran BDF extension. Put files in ~/.nastran/definitions/ or list them in the nastran.definitionFiles setting.",
+  "type": "object",
+  "additionalProperties": false,
+  "definitions": {
+    "type": {
+      "type": "string",
+      "description": "I integer, R real, S character, IR/IS/RS/IRS combinations, A any. A trailing ! marks a required field.",
+      "pattern": "^(I|R|S|IR|IS|RS|IRS|A|)!?$"
+    },
+    "field": {
+      "oneOf": [
+        {
+          "type": "array",
+          "description": "[name, type, description, reference group]",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": [
+            { "type": "string", "description": "Field name, e.g. EID" },
+            { "$ref": "#/definitions/type" },
+            { "type": "string", "description": "Description" },
+            { "type": "string", "description": "Reference group, e.g. grid, coord, mat, elem, prop, shellProp" }
+          ]
+        },
+        {
+          "type": "object",
+          "required": ["name"],
+          "additionalProperties": false,
+          "properties": {
+            "name": { "type": "string" },
+            "type": { "$ref": "#/definitions/type" },
+            "desc": { "type": "string" },
+            "ref": { "type": "string" },
+            "required": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+    "fields": {
+      "type": "array",
+      "description": "Data fields; index 0 is field 2 of the first line, each continuation adds 8 fields.",
+      "items": { "$ref": "#/definitions/field" }
+    },
+    "repeat": {
+      "type": "object",
+      "required": ["from", "fields"],
+      "additionalProperties": false,
+      "properties": {
+        "from": { "type": "integer", "minimum": 0, "description": "Data-field index where the repeating group starts" },
+        "fields": { "$ref": "#/definitions/fields" },
+        "start": { "type": "integer", "description": "Counter for the first group ({n} in names), default 1" },
+        "step": { "type": "integer", "description": "Counter increment per group, default 1" }
+      }
+    }
+  },
+  "properties": {
+    "$schema": { "type": "string" },
+    "name": { "type": "string", "description": "Label shown in hovers for items from this file" },
+    "cards": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string", "description": "Card name, e.g. MYCARD" },
+          "group": { "type": "string" },
+          "desc": { "type": "string" },
+          "fields": { "$ref": "#/definitions/fields" },
+          "repeat": { "$ref": "#/definitions/repeat" },
+          "idSpace": { "enum": ["grid", "element", "property", "material", "coord"] },
+          "listIds": { "type": "boolean" },
+          "notes": { "type": "string" },
+          "variants": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["when", "fields"],
+              "additionalProperties": false,
+              "properties": {
+                "when": {
+                  "type": "object",
+                  "required": ["index", "values"],
+                  "properties": {
+                    "index": { "type": "integer", "minimum": 0 },
+                    "values": { "type": "array", "items": { "type": "string" } }
+                  }
+                },
+                "desc": { "type": "string" },
+                "fields": { "$ref": "#/definitions/fields" },
+                "repeat": { "$ref": "#/definitions/repeat" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "params": {
+      "type": "array",
+      "description": "PARAM names (for example parameters read by DMAP alters with TYPE PARM,,..,Y,NAME)",
+      "items": {
+        "type": "object",
+        "required": ["name", "desc"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "desc": { "type": "string" },
+          "values": { "type": "string" },
+          "default": { "type": "string" }
+        }
+      }
+    },
+    "caseCommands": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "desc"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "desc": { "type": "string" },
+          "syntax": { "type": "string" },
+          "ref": { "type": "string", "description": "Reference group of the bulk data the value points to" },
+          "output": { "type": "boolean", "description": "Value refers to a case control SET" },
+          "describers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "desc"],
+              "properties": { "name": { "type": "string" }, "desc": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "statements": {
+      "type": "object",
+      "description": "Executive control / DMAP statement or subDMAP names and their descriptions",
+      "additionalProperties": { "type": "string" }
+    },
+    "includes": {
+      "type": "array",
+      "description": "Notes shown when hovering an INCLUDE whose file name matches the pattern",
+      "items": {
+        "type": "object",
+        "required": ["pattern", "desc"],
+        "additionalProperties": false,
+        "properties": {
+          "pattern": { "type": "string", "description": "File name glob (* and ?), e.g. my_alter.*" },
+          "desc": { "type": "string" }
+        }
+      }
+    },
+    "refGroups": {
+      "type": "object",
+      "description": "Additional reference groups or extra cards for existing groups",
+      "additionalProperties": { "type": "array", "items": { "type": "string" } }
+    }
+  }
+}

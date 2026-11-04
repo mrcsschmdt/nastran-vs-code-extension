@@ -1,0 +1,10 @@
+$ Small example DMAP alter (include before CEND in SOL 103).
+$ Prints the A-set stiffness matrix and writes it to the punch file.
+COMPILE SEMODES
+ALTER 'CALL.*SEKRRS'
+TYPE PARM,,I,Y,PRTKAA=0 $ 1 = print KAA
+IF ( PRTKAA > 0 ) THEN $
+   MATPRN KAA// $
+ENDIF $
+MATPCH KAA// $
+ENDALTER $

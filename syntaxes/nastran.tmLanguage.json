@@ -1,0 +1,170 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Nastran",
+  "scopeName": "source.nastran",
+  "patterns": [
+    {
+      "include": "#comment"
+    },
+    {
+      "include": "#include"
+    },
+    {
+      "include": "#section"
+    },
+    {
+      "include": "#numbered-statement"
+    },
+    {
+      "include": "#line-start-name"
+    },
+    {
+      "include": "#continuation"
+    },
+    {
+      "include": "#describers"
+    },
+    {
+      "include": "#constants"
+    },
+    {
+      "include": "#numbers"
+    },
+    {
+      "include": "#operators"
+    },
+    {
+      "include": "#strings"
+    }
+  ],
+  "repository": {
+    "comment": {
+      "match": "\\$.*$",
+      "name": "comment.line.dollar.nastran"
+    },
+    "include": {
+      "match": "^\\s*(?i:(INCLUDE))\\s*('[^']*'?|\"[^\"]*\"?|\\S+)?",
+      "captures": {
+        "1": {
+          "name": "keyword.control.import.nastran"
+        },
+        "2": {
+          "name": "string.quoted.single.nastran"
+        }
+      }
+    },
+    "section": {
+      "patterns": [
+        {
+          "match": "^\\s*(?i:(CEND|ENDDATA))\\b",
+          "captures": {
+            "1": {
+              "name": "keyword.control.section.nastran"
+            }
+          }
+        },
+        {
+          "match": "^\\s*(?i:(BEGIN)\\s+(BULK|SUPER|AFPM|TRMC|\\w+))(?:\\s*(=)\\s*(\\d+))?",
+          "captures": {
+            "1": {
+              "name": "keyword.control.section.nastran"
+            },
+            "2": {
+              "name": "keyword.control.section.nastran"
+            },
+            "3": {
+              "name": "keyword.operator.nastran"
+            },
+            "4": {
+              "name": "constant.numeric.integer.nastran"
+            }
+          }
+        }
+      ]
+    },
+    "numbered-statement": {
+      "match": "^\\s*(?i:(SUBCASE|SUBCOM|SYMCOM|REPCASE|SOL|TIME|DIAG))\\b\\s*([\\w,]*)",
+      "captures": {
+        "1": {
+          "name": "keyword.control.nastran"
+        },
+        "2": {
+          "name": "constant.numeric.nastran"
+        }
+      }
+    },
+    "line-start-name": {
+      "match": "^([A-Za-z][A-Za-z0-9]*)(\\*)?",
+      "captures": {
+        "1": {
+          "name": "entity.name.type.card.nastran"
+        },
+        "2": {
+          "name": "keyword.operator.large-field.nastran"
+        }
+      }
+    },
+    "continuation": {
+      "match": "^[+*][^\\s,]*",
+      "name": "punctuation.separator.continuation.nastran"
+    },
+    "describers": {
+      "begin": "\\(",
+      "end": "\\)",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.section.parens.begin.nastran"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.section.parens.end.nastran"
+        }
+      },
+      "patterns": [
+        {
+          "match": "[A-Za-z][A-Za-z0-9]*",
+          "name": "variable.parameter.describer.nastran"
+        },
+        {
+          "include": "#numbers"
+        },
+        {
+          "include": "#operators"
+        }
+      ]
+    },
+    "constants": {
+      "match": "(?i)(?<![A-Za-z0-9])(THRU|BY|ENDT|SKIP|ALL|NONE|YES|NO|EXCEPT)(?![A-Za-z0-9])",
+      "name": "constant.language.nastran"
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "match": "(?<![A-Za-z0-9.])[+-]?(?:\\d+\\.\\d*|\\.\\d+)(?:[eEdD][+-]?\\d+|[+-]\\d+)?",
+          "name": "constant.numeric.float.nastran"
+        },
+        {
+          "match": "(?<![A-Za-z0-9.])[+-]?\\d+(?![.\\d])",
+          "name": "constant.numeric.integer.nastran"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "match": "=",
+          "name": "keyword.operator.assignment.nastran"
+        },
+        {
+          "match": ",",
+          "name": "punctuation.separator.comma.nastran"
+        }
+      ]
+    },
+    "strings": {
+      "match": "'[^']*'",
+      "name": "string.quoted.single.nastran"
+    }
+  }
+}

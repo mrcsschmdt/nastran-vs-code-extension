@@ -1,0 +1,38 @@
+$ Sample deck for the Nastran BDF extension.
+$ Hover over any field, Ctrl+Click INCLUDE paths and IDs, try
+$ "Nastran: Convert Card(s) to ..." from the right-click menu.
+SOL 101
+TIME 600
+CEND
+TITLE = Sample cantilever plate with a stiffener
+ECHO = NONE
+DISPLACEMENT(PLOT,SORT1) = ALL
+SPCFORCES(PLOT) = ALL
+STRESS(PLOT,CORNER,VONMISES) = 5
+SET 5 = 1 THRU 4
+SPC = 1
+SUBCASE 1
+  SUBTITLE = Tip load
+  LOAD = 10
+SUBCASE 2
+  SUBTITLE = Gravity
+  LOAD = 20
+BEGIN BULK
+PARAM   POST    -1
+PARAM,AUTOSPC,YES
+$
+INCLUDE 'include/mesh.bdf'
+INCLUDE 'include/properties.bdf'
+$
+$ Boundary conditions and loads
+SPC1    1       123456  1       4       7
+FORCE   10      9               100.    0.      0.      -1.
+FORCE,10,6,,100.,0.,0.,-1.
+GRAV    20              9.81    0.      0.      -1.
+$
+$ A concentrated mass connected with an RBE2
+GRID*   100                             2.05            0.5
+*       0.
+CONM2   200     100             2.5
+RBE2    201     100     123456  3       6       9
+ENDDATA

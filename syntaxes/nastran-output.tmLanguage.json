@@ -1,0 +1,82 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Nastran Output",
+  "scopeName": "source.nastran-output",
+  "comment": "Nastran output (.f06): section headings, solver messages, page headers, numbers.",
+  "patterns": [
+    {
+      "include": "#page-header"
+    },
+    {
+      "include": "#end-of-job"
+    },
+    {
+      "include": "#message"
+    },
+    {
+      "include": "#carriage-control"
+    },
+    {
+      "include": "#comment"
+    },
+    {
+      "include": "#heading"
+    },
+    {
+      "include": "#numbers"
+    }
+  ],
+  "repository": {
+    "page-header": {
+      "comment": "First line of a page: '1' in column 1, title, date, version and page number.",
+      "match": "^1(?=\\s|$)(?!.*END OF JOB).*$",
+      "name": "comment.line.page-header.nastran"
+    },
+    "end-of-job": {
+      "match": "\\*\\s*\\*\\s*\\*\\s*END OF JOB\\s*\\*\\s*\\*\\s*\\*",
+      "name": "markup.heading.end-of-job.nastran"
+    },
+    "message": {
+      "patterns": [
+        {
+          "match": "^.?\\s*(?:\\*\\*\\*|\\^\\^\\^)\\s*(?:[A-Z]+\\s+)*?FATAL\\s+MESSAGE\\b.*$",
+          "name": "invalid.illegal.fatal.nastran"
+        },
+        {
+          "match": "^.?\\s*(?:\\*\\*\\*|\\^\\^\\^)\\s*(?:[A-Z]+\\s+)*?WARNING\\s+MESSAGE\\b.*$",
+          "name": "keyword.control.warning.nastran"
+        },
+        {
+          "match": "^.?\\s*(?:\\*\\*\\*|\\^\\^\\^)\\s*(?:[A-Z]+\\s+)*?INFORMATI(?:ON|VE)\\s+MESSAGE\\b.*$",
+          "name": "entity.name.type.information.nastran"
+        }
+      ]
+    },
+    "carriage-control": {
+      "comment": "Column 1 of an output line is carriage control (1 = new page, 0 = blank line before).",
+      "match": "^[01]",
+      "name": "punctuation.definition.carriage-control.nastran"
+    },
+    "heading": {
+      "comment": "Letter-spaced section heading, e.g. 'R E A L   E I G E N V A L U E S'.",
+      "match": "(?<!\\S)[A-Z(](?: [A-Z0-9().,=/+&'-]){2,}(?!\\S)(?:\\s{2,8}[A-Z0-9().,=/+&'-](?: [A-Z0-9().,=/+&'-])+(?!\\S))*",
+      "name": "markup.heading.section.nastran"
+    },
+    "comment": {
+      "match": "\\$.*$",
+      "name": "comment.line.dollar.nastran"
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "match": "(?<![A-Za-z0-9.])[+-]?(?:\\d+\\.\\d*|\\.\\d+)(?:[eEdD][+-]?\\d+|[+-]\\d+)?",
+          "name": "constant.numeric.float.nastran"
+        },
+        {
+          "match": "(?<![A-Za-z0-9.])[+-]?\\d+(?![.\\d])",
+          "name": "constant.numeric.integer.nastran"
+        }
+      ]
+    }
+  }
+}
