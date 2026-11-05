@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.0
+
+- Folding by the comment headers Simcenter writes: the translator banner, the boxed sections
+  (`$* EXECUTIVE CONTROL`, `$* BULK DATA` …), the card groups (`$* GRID CARDS`, `$* ELEMENT CARDS` …), and each
+  mesh collector with its meshes, property with its section, material, load, constraint, coordinate system and
+  modeling object. Each fold starts on the header's title, so *Fold All* gives a table of contents of the deck.
+  A collector that Simcenter repeats for each of its meshes folds once, over all of them.
+- Boxed titles in decks from other tools (`$-----` / `$ Title` / `$-----`) fold the same way.
+- Runs of one card type (CQUAD4, CHEXA …) end at a header, so each mesh has its own runs.
+- Large decks stay under VS Code's limit on folding regions (`editor.foldingMaximumRegions`, 5000 by default):
+  folds of single cards are dropped first, so sections and headers always fold.
+- New setting `nastran.folding.commentHeaders` (on by default).
+
 ## 0.2.0
 
 - Nastran output (`.f06`) files open in their own language, *Nastran Output*, without the input deck features

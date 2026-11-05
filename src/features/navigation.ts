@@ -300,8 +300,12 @@ export class NastranFoldingProvider implements vscode.FoldingRangeProvider {
     }
     const deck = this.model.deck(doc);
     const lines = splitLines(doc.getText());
-    const cardGroups = vscode.workspace.getConfiguration('nastran', doc).get<boolean>('folding.cardGroups', true);
-    return computeFolds(deck, lines, { cardGroups }).map(
+    const cfg = vscode.workspace.getConfiguration('nastran', doc);
+    const cardGroups = cfg.get<boolean>('folding.cardGroups', true);
+    const commentHeaders = cfg.get<boolean>('folding.commentHeaders', true);
+    // VS Code shows at most this many folds; computeFolds drops the least useful ones itself
+    const maxFolds = vscode.workspace.getConfiguration('editor', doc).get<number>('foldingMaximumRegions', 5000);
+    return computeFolds(deck, lines, { cardGroups, commentHeaders, maxFolds }).map(
       (f) => new vscode.FoldingRange(f.start, f.end, f.kind === 'region' ? vscode.FoldingRangeKind.Region : f.kind === 'comment' ? vscode.FoldingRangeKind.Comment : undefined),
     );
   }

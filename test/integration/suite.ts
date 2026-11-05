@@ -96,7 +96,7 @@ const tests: [string, () => Promise<void>][] = [
     }
   }],
   ['clean samples have no diagnostics', async () => {
-    for (const f of ['model.bdf', 'include/mesh.bdf', 'include/properties.bdf', 'alter.dmap', 'results.pch', 'matrix.pch']) {
+    for (const f of ['model.bdf', 'include/mesh.bdf', 'include/properties.bdf', 'alter.dmap', 'results.pch', 'matrix.pch', 'simcenter.dat']) {
       const doc = await open(f);
       await new Promise((r) => setTimeout(r, 800));
       const d = vscode.languages.getDiagnostics(doc.uri);
@@ -310,6 +310,18 @@ const tests: [string, () => Promise<void>][] = [
     const labels = list.items.map((i) => (typeof i.label === 'string' ? i.label : i.label.label));
     assert.ok(labels.includes('CQUAD4'));
     await vscode.commands.executeCommand('workbench.action.files.revert');
+  }],
+  ['Simcenter comment headers fold', async () => {
+    const doc = await open('simcenter.dat');
+    const lines = doc.getText().split(/\r?\n/);
+    const folds = await vscode.commands.executeCommand<vscode.FoldingRange[]>('vscode.executeFoldingRangeProvider', doc.uri);
+    const starts = new Set(folds.map((f) => lines[f.start].trim()));
+    for (const t of ['$* EXECUTIVE CONTROL', '$* BULK DATA', '$* ELEMENT CARDS', '$*  Mesh Collector: Thin Shell(1)', '$*  Mesh: 2d_mesh(2)', '$*  Material: Steel::simcenter_fem1::[1]']) {
+      assert.ok(starts.has(t), `no fold at ${t}`);
+    }
+    const bulk = folds.find((f) => lines[f.start].trim() === '$* BULK DATA')!;
+    assert.strictEqual(lines[bulk.end + 1].trim(), 'ENDDATA');
+    assert.strictEqual(bulk.kind, vscode.FoldingRangeKind.Region);
   }],
   ['.f06 output: language, outline, folding and messages', async () => {
     const doc = await open('modes.f06');

@@ -2,7 +2,7 @@
   "name": "nastran-bdf",
   "displayName": "Nastran BDF",
   "description": "Edit MSC/NX Nastran input decks (.bdf/.dat/.aset): field-aware hovers, small/large/free-field conversion, INCLUDE navigation, card references, outline and diagnostics. Read .f06 output files: section outline and folding, FATAL/WARNING messages in the Problems panel.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "mrcsschmdt",
   "icon": "images/icon.png",
   "license": "MIT",
@@ -311,6 +311,11 @@
           "default": true,
           "description": "Fold runs of consecutive bulk data cards by category (grids & coordinate systems, elements, properties, materials, constraints, loads, parameters ...) and by card type (CQUAD4, CTRIA3, CHEXA ...). A comment line directly above a run is used as the fold title."
         },
+        "nastran.folding.commentHeaders": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Fold by the comment headers that pre-processors write, e.g. Simcenter: boxed sections (`$* EXECUTIVE CONTROL`, `$* BULK DATA`), card groups (`$* ELEMENT CARDS`), and mesh collectors, meshes, properties and materials (`$*  Mesh Collector: Thin Shell(1)`). Each fold starts on the header's title, so a collapsed deck reads like a table of contents. Boxed titles in other decks (`$-----` / `$ Title` / `$-----`) fold too."
+        },
         "nastran.f06.messages": {
           "type": "string",
           "enum": [
@@ -414,7 +419,7 @@
   "scripts": {
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "test": "npm run compile && node --test out/test/parser.test.js out/test/definitions.test.js out/test/comments.test.js out/test/f06.test.js",
+    "test": "npm run compile && node --test out/test/parser.test.js out/test/definitions.test.js out/test/comments.test.js out/test/f06.test.js out/test/headers.test.js",
     "package": "npx @vscode/vsce package",
     "vscode:prepublish": "npm run compile",
     "test:vscode": "npm run compile && node out/test/integration/runTest.js"

@@ -1,0 +1,99 @@
+$*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$*
+$*                    Simcenter v2312.0.0.9140 Translator
+$*                    for Simcenter Nastran version 2312.0
+$*
+$*        ANALYSIS TYPE: Structural
+$*        SOLUTION NAME: modes
+$*        SOLUTION TYPE: SOL 103 Real Eigenvalues
+$*
+$*                UNITS: mm (milli-newton)
+$*
+$* Made-up sample for the Nastran BDF extension, written in the style of the Simcenter
+$* translator: fold the sections, card groups, mesh collectors and meshes.
+$*
+$*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$*
+$*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$*
+$* FILE MANAGEMENT
+$*
+$*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$*
+$*
+$*
+$*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$*
+$* EXECUTIVE CONTROL
+$*
+$*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$*
+ID,NASTRAN,simcenter
+SOL 103
+CEND
+$*
+$*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$*
+$* CASE CONTROL
+$*
+$*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$*
+ECHO = NONE
+METHOD = 100
+OUTPUT
+DISPLACEMENT(PLOT,REAL) = ALL
+$*
+$*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$*
+$* BULK DATA
+$*
+$*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$*
+BEGIN BULK
+$*
+$* SOLUTION CARDS
+$*
+$*  Modeling Object: Real Eigenvalue - Lanczos1
+EIGRL   100                     10      0                       MASS
+$*
+$* PARAM CARDS
+$*
+PARAM   POST    -1
+PARAM   AUTOSPC YES
+$*
+$* GRID CARDS
+$*
+GRID    1               0.      0.      0.
+GRID    2               10.     0.      0.
+GRID    3               20.     0.      0.
+GRID    4               0.      10.     0.
+GRID    5               10.     10.     0.
+GRID    6               20.     10.     0.
+GRID    7               0.      20.     0.
+GRID    8               10.     20.     0.
+GRID    9               20.     20.     0.
+$*
+$* ELEMENT CARDS
+$*
+$*  Mesh Collector: Thin Shell(1)
+$*  Mesh: 2d_mesh(1)
+CQUAD4  1       1       1       2       5       4
+CQUAD4  2       1       2       3       6       5
+$*  Mesh Collector: Thin Shell(1)
+$*  Mesh: 2d_mesh(2)
+CQUAD4  3       1       4       5       8       7
+CQUAD4  4       1       5       6       9       8
+$*  Mesh Collector: Concentrated Mass Collector(1)
+$*  Mesh: 0d_mesh(1)
+CONM2   10      9               .5
+$*
+$* PROPERTY CARDS
+$*
+$*  Property: PSHELL1::simcenter_fem1::[1]
+PSHELL  1       1       1.      1               1
+$*
+$* MATERIAL CARDS
+$*
+$*  Material: Steel::simcenter_fem1::[1]
+MAT1    1       210000.         .3      7.85-9
+ENDDATA
