@@ -187,7 +187,9 @@ src/parser/      deck parser (sections, cards, continuations, INCLUDE, case cont
 src/data/        card definitions, reference groups, case control / executive / PARAM knowledge
 src/features/    VS Code providers: hover, completion, diagnostics + quick fixes, formatting, navigation, editor UI
 src/model.ts     document cache, INCLUDE resolution, cross-file ID index
-syntaxes/        TextMate grammar
+syntaxes/        TextMate grammars (input decks, .f06 output)
+scripts/         theme contrast check, icon generator (build_icon.py, needs PySide6)
+images/          extension icon and the brain tile it is drawn on (scripts/build_icon.py)
 test/            unit tests, VS Code smoke tests, pyNastran round-trip check
 ```
 

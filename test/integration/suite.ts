@@ -291,7 +291,15 @@ const tests: [string, () => Promise<void>][] = [
     }
     const commentLines = lines.filter((l) => l.startsWith('$ '));
     assert.ok(commentLines.length >= 8, `${commentLines.length} comment lines`);
-    assert.ok(lines.includes('CQUAD4         1       1       1       2       5       4'), 'card is still intact');
+    // the card keeps its values; formatting writes the continuation marker in field 10 (FEMAP style)
+    // and moves the comment that was between its lines above it
+    const quad = lines.indexOf('CQUAD4         1       1       1       2       5       4                +');
+    assert.ok(quad > 0, `card is still intact: ${lines.find((l) => l.startsWith('CQUAD4'))}`);
+    assert.strictEqual(lines[quad + 1], '+                      1      1.      1.      1.      1.');
+    assert.ok(lines[quad - 1].startsWith('$ note'), 'inner comment moved above the card');
+    const grid = lines.findIndex((l) => l.startsWith('GRID'));
+    assert.strictEqual(lines[grid], 'GRID           1              0.      0.      0.');
+    assert.ok(lines[grid - 1].startsWith('$ note'), 'comment after the GRID card moved above it');
     await vscode.commands.executeCommand('workbench.action.revertAndCloseActiveEditor');
   }],
   ['completion offers cards in bulk data', async () => {

@@ -5,6 +5,7 @@
 !syntaxes/**
 !schemas/**
 !language-configuration.json
+!images/icon.png
 !README.md
 !package.json
 !LICENSE*
