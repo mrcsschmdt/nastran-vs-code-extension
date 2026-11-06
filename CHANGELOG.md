@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0
+
+- Decks from Simcenter are outlined by their comment headers: sections, card groups, mesh collectors, meshes,
+  properties, materials … with the card counts of each header in its detail (`3960 CQUAD4`). With VS Code's sticky
+  scroll, the headers you are in stay pinned at the top of the editor while you scroll through the cards.
+- Simcenter header comments (`$* BULK DATA`, `$*  Mesh Collector: Thin Shell(1)`) are colored as headings.
+- Outline: `ID,NASTRAN,job` is no longer shown as `ID ,NASTRAN,job`.
+
 ## 0.3.0
 
 - Folding by the comment headers Simcenter writes: the translator banner, the boxed sections

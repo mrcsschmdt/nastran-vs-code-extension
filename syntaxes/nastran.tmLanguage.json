@@ -4,6 +4,9 @@
   "scopeName": "source.nastran",
   "patterns": [
     {
+      "include": "#comment-header"
+    },
+    {
       "include": "#comment"
     },
     {
@@ -38,6 +41,19 @@
     }
   ],
   "repository": {
+    "comment-header": {
+      "comment": "Comment headers written by the Simcenter translator: section and card group titles ('$* BULK DATA', '$* ELEMENT CARDS') and objects ('$*  Mesh Collector: Thin Shell(1)'). Same scope as the .f06 section headings.",
+      "patterns": [
+        {
+          "match": "^\\$\\*\\s+[A-Z][A-Z0-9&/().,_+-]*(?: [A-Z0-9&/().,_+-]+)*\\s*$",
+          "name": "markup.heading.section.nastran"
+        },
+        {
+          "match": "^\\$\\*\\s{2,}(?:Mesh Collector|Mesh|Property|Section|Material|Modeling Object|Simulation Object|Step|Load|Constraint|Coordinate System|DOF Set|Region)\\s*:.*$",
+          "name": "markup.heading.object.nastran"
+        }
+      ]
+    },
     "comment": {
       "match": "\\$.*$",
       "name": "comment.line.dollar.nastran"

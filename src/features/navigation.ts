@@ -2,7 +2,8 @@ import * as vscode from 'vscode';
 import { Model, isOutputDocument, normId } from '../model';
 import { f06FoldingRanges, f06Symbols } from './output';
 import { Card, ParsedDeck, splitLines } from '../parser/deck';
-import { computeFolds } from '../parser/folding';
+import { computeFolds, findCommentHeaders } from '../parser/folding';
+import { hasSectionHeaders, headerSymbols, statementName } from './headerOutline';
 import { CARDS, defForCard, fieldDef } from '../data/cards';
 import { REF_GROUPS } from '../data/refs';
 import { lookupCaseCommand } from '../data/control';
@@ -214,6 +215,14 @@ export class NastranSymbolProvider implements vscode.DocumentSymbolProvider {
       return f06Symbols(doc, this.model.f06(doc));
     }
     const deck = this.model.deck(doc);
+    // decks with boxed section headers (Simcenter): outline by header, so sticky scroll shows them
+    if (vscode.workspace.getConfiguration('nastran', doc).get<boolean>('folding.commentHeaders', true)) {
+      const lines = splitLines(doc.getText());
+      const headers = findCommentHeaders(lines);
+      if (hasSectionHeaders(headers)) {
+        return headerSymbols(doc, deck, lines, headers);
+      }
+    }
     const lineRange = (a: number, b: number) => new vscode.Range(a, 0, b, doc.lineAt(b).text.length);
     const out: vscode.DocumentSymbol[] = [];
     const multipleSections = deck.sections.filter((s) => s.kind !== 'end').length > 1;
@@ -234,7 +243,7 @@ export class NastranSymbolProvider implements vscode.DocumentSymbolProvider {
       if (sec.kind === 'exec') {
         for (const st of deck.execStatements.filter((s) => inSec(s.line))) {
           const r = lineRange(st.line, st.line);
-          secSym.children.push(new vscode.DocumentSymbol(`${st.name} ${st.args}`.trim(), '', vscode.SymbolKind.Key, r, toRange(st.nameSpan)));
+          secSym.children.push(new vscode.DocumentSymbol(statementName(st.name, st.args), '', vscode.SymbolKind.Key, r, toRange(st.nameSpan)));
         }
       } else if (sec.kind === 'case') {
         const subSyms = new Map<number, vscode.DocumentSymbol>();

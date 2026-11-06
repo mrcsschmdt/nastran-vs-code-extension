@@ -323,6 +323,28 @@ const tests: [string, () => Promise<void>][] = [
     assert.strictEqual(lines[bulk.end + 1].trim(), 'ENDDATA');
     assert.strictEqual(bulk.kind, vscode.FoldingRangeKind.Region);
   }],
+  ['Simcenter deck outline follows its headers (sticky scroll)', async () => {
+    const doc = await open('simcenter.dat');
+    const syms = await vscode.commands.executeCommand<vscode.DocumentSymbol[]>('vscode.executeDocumentSymbolProvider', doc.uri);
+    const lines = doc.getText().split(/\r?\n/);
+    assert.deepStrictEqual(syms.map((s) => s.name), [
+      'Simcenter v2312.0.0.9140 Translator', 'FILE MANAGEMENT', 'EXECUTIVE CONTROL', 'CASE CONTROL', 'BULK DATA',
+    ]);
+    const exec = syms.find((s) => s.name === 'EXECUTIVE CONTROL')!;
+    assert.deepStrictEqual(exec.children.map((c) => c.name), ['ID,NASTRAN,simcenter', 'SOL 103', 'CEND']);
+    // every symbol starts on its header's title line, which sticky scroll pins at the top
+    assert.strictEqual(lines[exec.range.start.line], '$* EXECUTIVE CONTROL');
+    const elements = syms.find((s) => s.name === 'BULK DATA')!.children.find((c) => c.name === 'ELEMENT CARDS')!;
+    const shell = elements.children.find((c) => c.name === 'Mesh Collector: Thin Shell(1)')!;
+    assert.deepStrictEqual(shell.children.map((c) => [c.name, c.detail]), [['Mesh: 2d_mesh(1)', '2 CQUAD4'], ['Mesh: 2d_mesh(2)', '2 CQUAD4']]);
+    assert.strictEqual(lines[shell.children[1].range.start.line], '$*  Mesh: 2d_mesh(2)');
+    // ranges nest
+    const check = (s: vscode.DocumentSymbol) => s.children.forEach((c) => {
+      assert.ok(s.range.contains(c.range), `${c.name} outside ${s.name}`);
+      check(c);
+    });
+    syms.forEach(check);
+  }],
   ['.f06 output: language, outline, folding and messages', async () => {
     const doc = await open('modes.f06');
     assert.strictEqual(doc.languageId, 'nastran-output');
