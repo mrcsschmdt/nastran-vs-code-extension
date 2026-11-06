@@ -35,6 +35,7 @@ export interface FoldOptions {
  *
  *   level 1  boxed title          $*$$$$$$$$$$$ / $* BULK DATA / $*$$$$$$$$$$$   (also $----- and $===== boxes)
  *   level 2  title between blank comment lines   $* / $* ELEMENT CARDS / $*
+ *            or underlined title                 $ Design Variables Added by Attune (date) / $-----
  *   level 3  "Key: value" object  $*  Mesh Collector: Thin Shell(1)
  *   level 4  sub-object           $*  Mesh: 2d_mesh(1),  $*  Section: Seam Weld Connection1
  */
@@ -54,6 +55,7 @@ const BORDER = /^\$[*$#=\-]{10,}\s*$/;
 const BLANK_COMMENT = /^\$[*$]?\s*$/;
 const CAPS_TITLE = /^\$[*$]?\s+([A-Z][A-Z0-9&/().,_+-]*(?: [A-Z0-9&/().,_+-]+)*[A-Z)])\s*$/;
 const KEY_VALUE = /^\$\*\s{2,}([A-Z][A-Za-z0-9 ]*?)\s*:\s*(\S.*?)\s*$/;
+const UNDERLINED_TITLE = /^\$[*$]?\s+([A-Za-z].*?)\s*$/;
 /** Level 4 keys: they belong to the level 3 header above them. */
 const SUB_KEYS = new Set(['Mesh', 'Section']);
 /** Keys Simcenter writes; they are headers even right after another comment (e.g. a hand-added "$MASSES"). */
@@ -77,6 +79,20 @@ export function findCommentHeaders(lines: string[]): CommentHeader[] {
     }
     return h;
   };
+  /** A box starting at border line i: [closing border line, title line], or undefined. */
+  const box = (i: number): [number, number] | undefined => {
+    let j = i + 1;
+    while (j < n && j <= i + MAX_BOX_LINES && isComment(j) && !BORDER.test(lines[j])) {
+      j++;
+    }
+    if (j < n && BORDER.test(lines[j])) {
+      const t = lines.slice(i + 1, j).findIndex((l) => !BLANK_COMMENT.test(l));
+      if (t >= 0) {
+        return [j, i + 1 + t];
+      }
+    }
+    return undefined;
+  };
   let lastL3: CommentHeader | undefined;
   for (let i = 0; i < n; i++) {
     const text = lines[i];
@@ -85,19 +101,30 @@ export function findCommentHeaders(lines: string[]): CommentHeader[] {
     }
     if (BORDER.test(text)) {
       // a box: border, comment lines, border
-      let j = i + 1;
-      while (j < n && j <= i + MAX_BOX_LINES && isComment(j) && !BORDER.test(lines[j])) {
-        j++;
+      const b = box(i);
+      if (b) {
+        const title = lines[b[1]].replace(/^\$[*$]?\s*/, '').replace(/\s*\$*\s*$/, '');
+        out.push(grow({ line: b[1], top: i, bottom: b[0], level: 1, title }));
+        lastL3 = undefined;
+        i = b[0];
       }
-      if (j < n && BORDER.test(lines[j])) {
-        const t = lines.slice(i + 1, j).findIndex((l) => !BLANK_COMMENT.test(l));
-        if (t >= 0) {
-          const title = lines[i + 1 + t].replace(/^\$[*$]?\s*/, '').replace(/\s*\$*\s*$/, '');
-          out.push(grow({ line: i + 1 + t, top: i, bottom: j, level: 1, title }));
-          lastL3 = undefined;
-          i = j;
-        }
+      continue;
+    }
+    // an underlined title, e.g. "$ Design Variables Added by Attune (date)" / "$-----"; not a line of
+    // field names ("$   ID   CP   X1") and not the line above a box
+    const under = UNDERLINED_TITLE.exec(text);
+    if (under && i + 1 < n && BORDER.test(lines[i + 1]) && !/\s{3,}/.test(under[1]) && !box(i + 1)) {
+      // the underline can close a short paragraph ("$ --- appended by NEO app ---" ... "$ Source deck: x");
+      // the header then starts on the paragraph's first line, which also gives the title
+      let top = i;
+      while (top > i - 10 && isComment(top - 1) && !blank(top - 1) && !BORDER.test(lines[top - 1]) && out[out.length - 1]?.bottom !== top - 1) {
+        top--;
       }
+      const first = lines[top].replace(/^\$[*$]?\s*/, '').replace(/^[-=*\s]+|[-=*\s]+$/g, '');
+      const title = top < i && /[A-Za-z]/.test(first) ? first : under[1];
+      out.push(grow({ line: top, top, bottom: i + 1, level: 2, title }));
+      lastL3 = undefined;
+      i++;
       continue;
     }
     const caps = CAPS_TITLE.exec(text);

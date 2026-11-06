@@ -337,7 +337,18 @@ export function lookupCaseCommand(name: string): CaseCommandDef | undefined {
 // PARAMs
 
 const paramDefs: ParamDef[] = [
-  { name: 'POST', desc: 'Post-processing output: -1 = OP2 for Patran, -2 = OP2 for EMS/I-DEAS, 0 = XDB database, 1 = OP2 legacy.', values: '-2, -1, 0, 1', default: '1' },
+  {
+    name: 'POST',
+    desc:
+      'Post-processing results file.\n\n' +
+      '- `-1`: OP2 (OUTPUT2) as Patran and Femap read it. Vector results in the global (displacement) coordinate systems; model geometry only with `PARAM,OGEOM,YES`. **Femap default.**\n' +
+      '- `-2`: OP2 as I-DEAS / Simcenter 3D read it, with the model geometry tables. **The Simcenter (NX) translator writes this, also in decks it exports for MSC Nastran.** Vector results are in the basic system; add `PARAM,OUGCORD,GLOBAL` for the global systems (Femap and ATA Attune need that).\n' +
+      '- `0`: XDB results database (MSC Nastran) for Patran.\n\n' +
+      'Patran reads `-1` or `0`, Femap `-1` (or `-2` with its Results Destination set to Simcenter), Simcenter 3D `-2`. Check the Quick Reference Guide of your solver version for the other values.',
+    values: '-2, -1, 0, 1',
+    default: '1',
+  },
+  { name: 'OUGCORD', desc: 'Coordinate system of displacements and other vector results in the OP2 file. GLOBAL writes them in each grid\'s global (displacement, CD) system, as in the .f06 and .pch. Use it with `PARAM,POST,-2`, which otherwise writes the basic system (Femap and ATA Attune need GLOBAL).', values: 'GLOBAL' },
   { name: 'AUTOSPC', desc: 'Automatically constrain singular degrees of freedom.', values: 'YES / NO', default: 'YES (SOL 101-200)' },
   { name: 'GRDPNT', desc: 'Grid point weight generator: reference grid for the mass summary (0 = basic origin, -1 = off).', values: 'grid ID', default: '-1' },
   { name: 'WTMASS', desc: 'Multiplies the mass (e.g. 0.00259 to convert lbm to slinch).', values: 'real', default: '1.0' },
@@ -350,7 +361,7 @@ const paramDefs: ParamDef[] = [
   { name: 'NOCOMPS', desc: 'Controls composite ply stress output versus equivalent homogeneous element stress output (see the QRG for the value meanings).', values: '-1, 0, 1' },
   { name: 'SRCOMPS', desc: 'Composite ply strength ratio output.', values: 'YES / NO', default: 'NO' },
   { name: 'SNORM', desc: 'Unique grid point normals for shells within the given angle (degrees).', values: 'real', default: '20.' },
-  { name: 'OGEOM', desc: 'Write geometry tables to the OP2 file.', values: 'YES / NO', default: 'YES' },
+  { name: 'OGEOM', desc: 'Write the model geometry tables to the OP2 file. Post-processors that read `PARAM,POST,-1` OP2 files without the model (e.g. without the .bdf) need it.', values: 'YES / NO', default: 'YES' },
   { name: 'PRTMAXIM', desc: 'Print the maximum displacement/SPC force/applied load summary.', values: 'YES / NO', default: 'NO' },
   { name: 'G', desc: 'Uniform structural damping coefficient (frequency response / transient with W3).', values: 'real', default: '0.0' },
   { name: 'W3', desc: 'Frequency (rad/time) used to convert structural damping G to viscous damping in transient.', values: 'real', default: '0.0' },

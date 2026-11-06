@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.0
+
+- The design variable section ATA Attune appends to SOL 200 decks (`$ Design Variables Added by Attune (date)`)
+  is recognized as a section: it folds, shows in the outline with its card counts, stays pinned by sticky scroll
+  and is colored as a heading. Underlined titles (`$ Title` / `$-----`) in general fold the same way; when the
+  underline closes a short comment paragraph, the header starts on the paragraph's first line.
+- New cards: DVMREL1, DVMREL2, DVCREL1 and DLINK.
+- PARAM POST hover explains each value and which tool uses it (Femap `-1`, Simcenter `-2`, Patran `-1` / `0`).
+  New hover help for PARAM OUGCORD; clearer OGEOM.
+
 ## 0.4.0
 
 - Decks from Simcenter are outlined by their comment headers: sections, card groups, mesh collectors, meshes,

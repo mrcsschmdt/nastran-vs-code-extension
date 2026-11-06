@@ -148,6 +148,40 @@ test('not headers: prose with a colon, commented-out headers, separator lines, c
   assert.deepEqual(findCommentHeaders(known).map((h) => h.level), [3, 4]);
 });
 
+test('the design variable section ATA Attune appends is a card group level header', () => {
+  const lines = splitLines(fs.readFileSync(path.join(__dirname, '../../samples/attune_sol200.dat'), 'utf8'));
+  const title = '$ Design Variables Added by Attune (06-Nov-2026 11:48:45)';
+  const heads = findCommentHeaders(lines);
+  const att = heads.find((h) => lines[h.line] === title);
+  assert.ok(att, heads.map((h) => h.title).join(' | '));
+  assert.equal(att.level, 2);
+  assert.equal(att.title, 'Design Variables Added by Attune (06-Nov-2026 11:48:45)');
+  const tree = headerTree(lines);
+  // MATERIAL CARDS ends before it; it runs to the line before ENDDATA
+  assert.ok(tree.includes('3 Material: Steel::attune_fem1::[1]: MAT1    901     2.9+7           .29     7.33-4'), tree.join('\n'));
+  assert.ok(tree.includes('2 Design Variables Added by Attune (06-Nov-2026 11:48:45): *                    902 2.9000000000e+7'), tree.join('\n'));
+  // the Attune cards are known and parse in large field
+  const deck = parseDeck(lines);
+  const names = deck.cards.filter((c) => c.startLine > att.line && c.name !== 'ENDDATA').map((c) => `${c.name}:${c.format}`);
+  assert.deepEqual(names, ['DESVAR:large', 'DESVAR:large', 'DVPREL1:large', 'DVMREL1:large']);
+});
+
+test('an underline that closes a comment paragraph: the header starts on the paragraph', () => {
+  const lines = [
+    'MAT1    1       2.9+7           .29',
+    '$ --- appended by a script ---',
+    '$ SOL 200 design variables (free field)',
+    '$ Source deck: model.dat',
+    '$------------------------------------------------------------------------',
+    'DESVAR,1,THICK,1.0,0.5,2.0',
+    'ENDDATA',
+  ];
+  assert.deepEqual(findCommentHeaders(lines).map((h) => [h.line, h.level, h.title]), [[1, 2, 'appended by a script']]);
+  // a line of field names above a separator is not a header
+  const fields = ['$       ID      CP      X1      X2      X3', '$----------------------------------------', 'GRID    1               0.      0.      0.'];
+  assert.deepEqual(findCommentHeaders(fields), []);
+});
+
 test('boxed headers in other decks; a section delimiter without a box ends their fold', () => {
   const lines = [
     'SOL 101',

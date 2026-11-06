@@ -2,7 +2,7 @@
   "name": "nastran-bdf",
   "displayName": "Nastran BDF",
   "description": "Edit MSC/NX Nastran input decks (.bdf/.dat/.aset): field-aware hovers, small/large/free-field conversion, INCLUDE navigation, card references, outline and diagnostics. Read .f06 output files: section outline and folding, FATAL/WARNING messages in the Problems panel.",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "publisher": "mrcsschmdt",
   "icon": "images/icon.png",
   "license": "MIT",

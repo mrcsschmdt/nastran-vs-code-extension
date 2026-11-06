@@ -42,7 +42,7 @@
   ],
   "repository": {
     "comment-header": {
-      "comment": "Comment headers written by the Simcenter translator: section and card group titles ('$* BULK DATA', '$* ELEMENT CARDS') and objects ('$*  Mesh Collector: Thin Shell(1)'). Same scope as the .f06 section headings.",
+      "comment": "Comment headers written by the Simcenter translator: section and card group titles ('$* BULK DATA', '$* ELEMENT CARDS') and objects ('$*  Mesh Collector: Thin Shell(1)'). Same scope as the .f06 section headings. Also the section ATA Attune writes for SOL 200: '$ Design Variables Added by Attune (date)'.",
       "patterns": [
         {
           "match": "^\\$\\*\\s+[A-Z][A-Z0-9&/().,_+-]*(?: [A-Z0-9&/().,_+-]+)*\\s*$",
@@ -51,6 +51,10 @@
         {
           "match": "^\\$\\*\\s{2,}(?:Mesh Collector|Mesh|Property|Section|Material|Modeling Object|Simulation Object|Step|Load|Constraint|Coordinate System|DOF Set|Region)\\s*:.*$",
           "name": "markup.heading.object.nastran"
+        },
+        {
+          "match": "^\\$[*$]?\\s*Design Variables Added by Attune\\b.*$",
+          "name": "markup.heading.section.nastran"
         }
       ]
     },

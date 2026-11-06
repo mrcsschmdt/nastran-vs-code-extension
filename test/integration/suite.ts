@@ -96,7 +96,7 @@ const tests: [string, () => Promise<void>][] = [
     }
   }],
   ['clean samples have no diagnostics', async () => {
-    for (const f of ['model.bdf', 'include/mesh.bdf', 'include/properties.bdf', 'alter.dmap', 'results.pch', 'matrix.pch', 'simcenter.dat']) {
+    for (const f of ['model.bdf', 'include/mesh.bdf', 'include/properties.bdf', 'alter.dmap', 'results.pch', 'matrix.pch', 'simcenter.dat', 'attune_sol200.dat']) {
       const doc = await open(f);
       await new Promise((r) => setTimeout(r, 800));
       const d = vscode.languages.getDiagnostics(doc.uri);
@@ -344,6 +344,19 @@ const tests: [string, () => Promise<void>][] = [
       check(c);
     });
     syms.forEach(check);
+  }],
+  ['Attune design variable section: outline, sticky header and DVMREL1 hover', async () => {
+    const doc = await open('attune_sol200.dat');
+    const lines = doc.getText().split(/\r?\n/);
+    const syms = await vscode.commands.executeCommand<vscode.DocumentSymbol[]>('vscode.executeDocumentSymbolProvider', doc.uri);
+    const bulk = syms.find((s) => s.name === 'BULK DATA')!;
+    const att = bulk.children.find((c) => c.name.startsWith('Design Variables Added by Attune'))!;
+    assert.ok(att, bulk.children.map((c) => c.name).join(' | '));
+    assert.strictEqual(att.detail, '2 DESVAR, 1 DVPREL1, 1 DVMREL1');
+    assert.strictEqual(lines[att.range.start.line], '$ Design Variables Added by Attune (06-Nov-2026 11:48:45)');
+    const line = lines.findIndex((l) => l.startsWith('DVMREL1*'));
+    const hovers = await vscode.commands.executeCommand<vscode.Hover[]>('vscode.executeHoverProvider', doc.uri, new vscode.Position(line, 70));
+    assert.match(hoverText(hovers), /MPNAME/, 'field 5 of DVMREL1 is MPNAME');
   }],
   ['.f06 output: language, outline, folding and messages', async () => {
     const doc = await open('modes.f06');

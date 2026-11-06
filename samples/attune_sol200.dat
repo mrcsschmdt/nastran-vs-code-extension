@@ -1,0 +1,94 @@
+$*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$*
+$*                    Simcenter v2312.0.0.9140 Translator
+$*                    for Simcenter Nastran version 2312.0
+$*
+$* Made-up SOL 200 sample for the Nastran BDF extension, with the design
+$* variable section that ATA Attune appends before ENDDATA.
+$*
+$*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$*
+$*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$*
+$* EXECUTIVE CONTROL
+$*
+$*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$*
+SOL 200
+$ INCLUDE 'attune30.dmap' goes here (left out: the DMAP is not in this folder)
+CEND
+$*
+$*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$*
+$* CASE CONTROL
+$*
+$*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$*
+ECHO = NONE
+ANALYSIS = MODES
+METHOD = 900
+DSAPRT(END=SENS) = ALL
+DISPLACEMENT(PLOT) = ALL
+$*
+$*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$*
+$* BULK DATA
+$*
+$*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$*
+BEGIN BULK
+$*
+$* SOLUTION CARDS
+$*
+$*  Modeling Object: Real Eigenvalue - Lanczos1
+EIGRL   900                     6
+$*
+$* PARAM CARDS
+$*
+PARAM   POST    -2
+PARAM   OUGCORD GLOBAL
+PARAM   MREDUC  USET
+PARAM   OUTFORM OP2
+PARAM   REDMETH STATIC
+$*
+$* GRID CARDS
+$*
+GRID    901             00.     00.     0.
+GRID    902             10.     00.     0.
+GRID    903             00.     10.     0.
+GRID    904             10.     10.     0.
+GRID    905             30.     0.      0.
+$*
+$* ELEMENT CARDS
+$*
+$*  Mesh Collector: Thin Shell(1)
+$*  Mesh: 2d_mesh(1)
+CQUAD4  901     901     901     902     904     903
+$*  Mesh Collector: Spring Collector(1)
+$*  Mesh: 0d_mesh(1)
+CELAS1  902     902     902     3       905     3
+$*
+$* PROPERTY CARDS
+$*
+$*  Property: PSHELL1::attune_fem1::[1]
+PSHELL  901     901     1.      901             901
+$*  Property: PELAS1::attune_fem1::[2]
+PELAS   902     1.+5
+$*
+$* MATERIAL CARDS
+$*
+$*  Material: Steel::attune_fem1::[1]
+MAT1    901     2.9+7           .29     7.33-4
+$ Design Variables Added by Attune (06-Nov-2026 11:48:45)
+$-----------------------------------------------------
+DESVAR*              901          SP02K1    1.0000000000
+*
+DESVAR*              902          MT001E    1.0000000000
+*
+DVPREL1*             901           PELAS             902              K1
+*
+*                    901 1.0000000000e+5
+DVMREL1*             902            MAT1             901               E
+*
+*                    902 2.9000000000e+7
+ENDDATA

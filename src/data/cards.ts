@@ -812,6 +812,21 @@ card('DVPREL2', O, 'Property as a function (DEQATN) of design variables', [
   ['ID', 'I!', 'Relation ID'], ['TYPE', 'S!', 'Property card name'], ['PID', 'I!', 'Property ID', 'prop'],
   ['PNAME/FID', 'IS', 'Property name or field position'], r('PMIN', 'Minimum value'), r('PMAX', 'Maximum value'), ['EQID', 'I!', 'DEQATN ID'], _,
 ], { repeat: { from: 8, fields: [['DESVAR/DTABLE', 'A', '"DESVAR" followed by DVIDs, "DTABLE" followed by labels']] } });
+card('DVMREL1', O, 'Material property as a linear function of design variables: MP = C0 + sum(COEFi * DVIDi)', [
+  ['ID', 'I!', 'Relation ID'], ['TYPE', 'S!', 'Material card name, e.g. MAT1'], ['MID', 'I!', 'Material ID', 'mat'],
+  ['MPNAME', 'S!', 'Material property name, e.g. E, G, NU, RHO'], r('MPMIN', 'Minimum value'), r('MPMAX', 'Maximum value'), r('C0', 'Constant term'), _,
+], { repeat: { from: 8, fields: [['DVID{n}', 'I', 'DESVAR ID', 'desvar'], r('COEF{n}', 'Coefficient')] } });
+card('DVMREL2', O, 'Material property as a function (DEQATN) of design variables', [
+  ['ID', 'I!', 'Relation ID'], ['TYPE', 'S!', 'Material card name'], ['MID', 'I!', 'Material ID', 'mat'],
+  ['MPNAME', 'S!', 'Material property name'], r('MPMIN', 'Minimum value'), r('MPMAX', 'Maximum value'), ['EQID', 'I!', 'DEQATN ID'], _,
+], { repeat: { from: 8, fields: [['DESVAR/DTABLE', 'A', '"DESVAR" followed by DVIDs, "DTABLE" followed by labels']] } });
+card('DVCREL1', O, 'Connectivity property (e.g. CONM2 mass, CBAR offset) as a linear function of design variables', [
+  ['ID', 'I!', 'Relation ID'], ['TYPE', 'S!', 'Element card name, e.g. CONM2'], ['EID', 'I!', 'Element ID', 'elem'],
+  ['CPNAME', 'S!', 'Connectivity property name, e.g. M, X1'], r('CPMIN', 'Minimum value'), r('CPMAX', 'Maximum value'), r('C0', 'Constant term'), _,
+], { repeat: { from: 8, fields: [['DVID{n}', 'I', 'DESVAR ID', 'desvar'], r('COEF{n}', 'Coefficient')] } });
+card('DLINK', O, 'Design variable as a linear function of other design variables: DDVID = C0 + CMULT * sum(Ci * IDVi)', [
+  ['ID', 'I!', 'Relation ID'], ['DDVID', 'I!', 'Dependent DESVAR ID', 'desvar'], r('C0', 'Constant term (default 0.0)'), r('CMULT', 'Multiplier (default 1.0)'),
+], { repeat: { from: 4, fields: [['IDV{n}', 'I', 'Independent DESVAR ID', 'desvar'], r('C{n}', 'Coefficient')] } });
 card('DRESP1', O, 'Design response (single)', [
   ['ID', 'I!', 'Response ID'], ['LABEL', 'S!', 'User label'], ['RTYPE', 'S!', 'Response type: WEIGHT, VOLUME, DISP, STRESS, STRAIN, FORCE, EIGN, FREQ, LAMA, ...'],
   ['PTYPE', 'S', 'Property/element type, e.g. PSHELL, ELEM'], ['REGION', 'I', 'Region identifier'], ['ATTA', 'IS', 'Response attribute (component / item code)'],
