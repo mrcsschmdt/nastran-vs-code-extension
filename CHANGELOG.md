@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.1
+
+- Field shading and the field / card shown in the status bar now work in decks of any size. Before, files over
+  `nastran.maxLinesForAnalysis` lines (400,000) got neither; now that limit only turns off diagnostics.
+
 ## 0.5.0
 
 - The design variable section ATA Attune appends to SOL 200 decks (`$ Design Variables Added by Attune (date)`)

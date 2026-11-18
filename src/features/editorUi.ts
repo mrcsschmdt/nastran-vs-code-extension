@@ -87,8 +87,9 @@ export class EditorUi implements vscode.Disposable {
     if (doc.languageId !== 'nastran') {
       return;
     }
-    const max = vscode.workspace.getConfiguration('nastran').get<number>('maxLinesForAnalysis', 400000);
-    if (!this.enabled() || doc.lineCount > max) {
+    // No line limit: only the lines around the visible ranges are shaded, and the parsed deck is
+    // cached and shared with folding and the outline, which parse every deck anyway.
+    if (!this.enabled()) {
       ed.setDecorations(this.shade, []);
       ed.setDecorations(this.shadeActive, []);
       return;
@@ -128,8 +129,7 @@ export class EditorUi implements vscode.Disposable {
   }
 
   private updateStatus(ed: vscode.TextEditor) {
-    const max = vscode.workspace.getConfiguration('nastran').get<number>('maxLinesForAnalysis', 400000);
-    if ((ed.document.languageId !== 'nastran' && !isOutputDocument(ed.document)) || ed.document.lineCount > max) {
+    if (ed.document.languageId !== 'nastran' && !isOutputDocument(ed.document)) {
       this.status.hide();
       return;
     }

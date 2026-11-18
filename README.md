@@ -80,7 +80,7 @@ CQUAD4,10,1,101,102,103,104,0.,.002                                             
 | `nastran.includePaths` | `[]` | Extra directories for resolving relative INCLUDE paths |
 | `nastran.index.searchWorkspace` | `true` | Search the whole workspace when an ID is not in the include tree |
 | `nastran.f06.messages` | `warning` | Solver messages of `.f06` files listed in the Problems panel and Outline: `fatal`, `warning` (FATAL + WARNING) or `information` (all) |
-| `nastran.maxLinesForAnalysis` | `400000` | Larger files skip diagnostics, shading and the status bar item |
+| `nastran.maxLinesForAnalysis` | `400000` | Larger files skip diagnostics; shading, folding, the outline and the status bar work at any size |
 
 Shading colors can be changed per theme with `workbench.colorCustomizations`:
 `nastran.fieldShadingBackground` (normal lines) and `nastran.fieldShadingActiveLineBackground` (the cursor line and
@@ -219,7 +219,7 @@ Always check the MSC Nastran Quick Reference Guide for the full rules of a card.
 * The card database does not cover every entry. Field types are only checked for known cards.
 * Field layouts follow MSC Nastran. Simcenter (NX) Nastran differs on some entries.
 * Unresolved references are not reported yet (the defining card may be in a parent deck).
-* Parsing is not incremental. Files over `nastran.maxLinesForAnalysis` lines get syntax highlighting, hover and navigation only.
+* Parsing is not incremental: after an edit the whole file is parsed again (about a second for an 800,000-line deck). Files over `nastran.maxLinesForAnalysis` lines get no diagnostics; everything else works.
 * Design cycle grouping is based on the `DESIGN CYCLE NUMBER = n` lines. It has been checked on SOL 200 runs with a single
   cycle, and on made-up output with several.
 * Possible next steps: jump from a grid/element ID in an `.f06` table to its card in the deck, punch result navigation, a DMIG/DTI layout, PARAM value checks, a rename refactoring for IDs, and generating card definitions from pyNastran.

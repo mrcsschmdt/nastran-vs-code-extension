@@ -2,7 +2,7 @@
   "name": "nastran-bdf",
   "displayName": "Nastran BDF",
   "description": "Edit MSC/NX Nastran input decks (.bdf/.dat/.aset): field-aware hovers, small/large/free-field conversion, INCLUDE navigation, card references, outline and diagnostics. Read .f06 output files: section outline and folding, FATAL/WARNING messages in the Problems panel.",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "publisher": "mrcsschmdt",
   "icon": "images/icon.png",
   "license": "MIT",
@@ -334,7 +334,7 @@
         "nastran.maxLinesForAnalysis": {
           "type": "number",
           "default": 400000,
-          "description": "Files longer than this skip diagnostics and field shading to keep the editor responsive."
+          "description": "Files longer than this skip diagnostics (which check every card after each edit) to keep the editor responsive. Field shading, folding, the outline and the status bar work in files of any size."
         },
         "nastran.includePaths": {
           "type": "array",
